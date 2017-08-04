@@ -14,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.facebook.drawee.view.SimpleDraweeView;
-
-import java.util.List;
 import chat.rocket.android.widget.AbsoluteUrl;
 import chat.rocket.android.widget.R;
 import chat.rocket.android.widget.helper.FrescoHelper;
@@ -24,6 +21,8 @@ import chat.rocket.core.models.Attachment;
 import chat.rocket.core.models.AttachmentAuthor;
 import chat.rocket.core.models.AttachmentField;
 import chat.rocket.core.models.AttachmentTitle;
+import com.facebook.drawee.view.SimpleDraweeView;
+import java.util.List;
 
 /**
  */
@@ -120,8 +119,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
 
     authorBox.setVisibility(VISIBLE);
 
-    FrescoHelper.setupDraweeAndLoadImage(absolutize(author.getIconUrl()),
-        (SimpleDraweeView) attachmentView.findViewById(R.id.author_icon));
+    FrescoHelper.INSTANCE.loadImageWithCustomization((SimpleDraweeView) attachmentView.findViewById(R.id.author_icon), absolutize(author.getIconUrl()));
 
     final TextView authorName = (TextView) attachmentView.findViewById(R.id.author_name);
     authorName.setText(author.getName());
@@ -188,7 +186,7 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
       thumbImage.setVisibility(GONE);
     } else {
       thumbImage.setVisibility(VISIBLE);
-      FrescoHelper.setupDraweeAndLoadImage(absolutize(thumbUrl), thumbImage);
+      FrescoHelper.INSTANCE.loadImageWithCustomization(thumbImage, absolutize(thumbUrl));
     }
 
     final TextView refText = (TextView) refBox.findViewById(R.id.text);
@@ -253,17 +251,16 @@ public class RocketChatMessageAttachmentsLayout extends LinearLayout {
                          boolean autoloadImage) {
     if (autoloadImage) {
       load.setVisibility(GONE);
-      FrescoHelper.setupDraweeAndLoadImage(url, drawee);
+      FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       return;
     }
 
-    FrescoHelper.setupDrawee(drawee);
     load.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
         load.setVisibility(GONE);
         load.setOnClickListener(null);
-        FrescoHelper.loadImage(url, drawee);
+        FrescoHelper.INSTANCE.loadImageWithCustomization(drawee, url);
       }
     });
   }
